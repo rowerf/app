@@ -1,7 +1,28 @@
 <resources>
     <string name="app_name">programmeerproject</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">app</string>
     <string name="title_location_permission">request location permission</string>
-    <string name="text_location_permission">are you ok</string>
-    <string name="ok">ok</string>
+    <string name="text_location_permission">are you OK</string>
+    <string name="ok">OK</string>
+    <string name="title_activity_register_login">RegisterLogin</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="login">login</string>
+    <string name="register">register</string>
+    <string name="welcome">welcome</string>
+    <string name="title_activity_register">Register</string>
+    <string name="title_activity_friends">FriendsActivity</string>
+    <string name="username_and_password">Please enter a username and password</string>
+    <string name="preferences">Please indicate your diets, allergies and/or other preferences</string>
+    <string name="vegetarian">vegetarian</string>
+    <string name="biological">biological</string>
+    <string name="lactose_free">lactose-free</string>
+    <string name="sugar_free">sugar-free</string>
+    <string name="gluten_free">glutenfree</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">confirm</string>
+    <string name="friends">Friends</string>
+    <string name="add_friend">add friend</string>
+    <string name="see_friends">see friends</string>
+    <string name="search">zoek restaurants</string>
 </resources>
