@@ -9,21 +9,12 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
-        <activity android:name=".SearchActivity">
-        </activity>
-
-        <activity
-            android:name=".FriendsActivity"
-            android:label="@string/title_activity_friends"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
 
         <activity
             android:name=".RegisterActivity"
@@ -32,9 +23,13 @@
         </activity>
 
         <activity
-            android:name=".FirstActivity"
+            android:name=".LoginActivity"
             android:label="@string/title_activity_register_login"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <!-- Something something Maps API key
@@ -52,10 +47,6 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 </manifest>

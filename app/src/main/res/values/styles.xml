@@ -19,7 +19,7 @@
 
     <style name="checkBoxTheme">
         <item name="colorControlNormal">#727272</item>
-        <item name="colorControlActivated">#FDA335</item>
+        <item name="colorControlActivated">#74A7FF</item>
     </style>
 
 </resources>

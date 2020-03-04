@@ -25,14 +25,14 @@
             android:text="@string/register" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tv_username_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/username_and_password" />
 
 
         <EditText
-            android:id="@+id/username"
+            android:id="@+id/et_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -41,28 +41,23 @@
             android:hint="@string/username" />
 
         <TextView
-            android:id="@+id/FBusername"
+            android:id="@+id/fb_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="" />
-
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            android:textColor="#727272"
-            android:hint="e-mail" />
+            android:visibility="gone"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/fb_username" />
 
         <TextView
-            android:id="@+id/FBemail"
+            android:id="@+id/fb_username2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="" />
+            android:visibility="gone"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/fb_username_2" />
 
         <EditText
-            android:id="@+id/password"
+            android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -71,10 +66,20 @@
             android:hint="@string/password"/>
 
         <TextView
-            android:id="@+id/FBpassword"
+            android:id="@+id/fb_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="" />
+            android:visibility="gone"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/fb_password" />
+
+        <TextView
+            android:id="@+id/fb_password2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/fb_password_2" />
 
         <!--<TextView
             android:id="@+id/kitchens"
@@ -145,7 +150,6 @@
                 android:layout_weight="1"
                 android:theme="@style/checkBoxTheme"
                 android:text="french" />
-
         </LinearLayout>-->
 
         <TextView
@@ -155,6 +159,14 @@
             android:paddingTop="15dp"
             android:text="@string/preferences" />
 
+        <TextView
+            android:id="@+id/fb_preferences"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/fb_preferences" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -162,50 +174,59 @@
             android:paddingRight="16dp"
             android:orientation="vertical" >
 
-        <CheckBox
-            android:id="@+id/vegetarian"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:theme="@style/checkBoxTheme"
-            android:textColor="#727272"
-            android:text="@string/vegetarian" />
+            <CheckBox
+                android:id="@+id/vegetarian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:theme="@style/checkBoxTheme"
+                android:textColor="#727272"
+                android:text="@string/vegetarian" />
 
-        <CheckBox
-            android:id="@+id/biological"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:theme="@style/checkBoxTheme"
-            android:textColor="#727272"
-            android:text="@string/biological" />
+            <CheckBox
+                android:id="@+id/vegan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:theme="@style/checkBoxTheme"
+                android:textColor="#727272"
+                android:text="@string/vegan" />
 
-        <CheckBox
-            android:id="@+id/glutenfree"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:theme="@style/checkBoxTheme"
-            android:textColor="#727272"
-            android:text="@string/gluten_free" />
+            <CheckBox
+                android:id="@+id/biological"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:theme="@style/checkBoxTheme"
+                android:textColor="#727272"
+                android:text="@string/biological" />
 
-        <CheckBox
-            android:id="@+id/lactosefree"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:theme="@style/checkBoxTheme"
-            android:textColor="#727272"
-            android:text="@string/lactose_free" />
+            <CheckBox
+                android:id="@+id/glutenfree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:theme="@style/checkBoxTheme"
+                android:textColor="#727272"
+                android:text="@string/gluten_free" />
 
-        <CheckBox
-            android:id="@+id/sugarfree"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:theme="@style/checkBoxTheme"
-            android:textColor="#727272"
-            android:text="@string/sugar_free" />
+            <CheckBox
+                android:id="@+id/lactosefree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:theme="@style/checkBoxTheme"
+                android:textColor="#727272"
+                android:text="@string/lactose_free" />
+
+            <CheckBox
+                android:id="@+id/sugarfree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:theme="@style/checkBoxTheme"
+                android:textColor="#727272"
+                android:text="@string/sugar_free" />
     </LinearLayout>
 </LinearLayout>
 

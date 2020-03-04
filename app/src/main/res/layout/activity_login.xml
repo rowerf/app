@@ -8,26 +8,28 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/message"
+        android:id="@+id/welcome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="30sp"
         android:gravity="center"
         android:padding="15dp"
         android:textAllCaps="true"
-        android:text="@string/welcome" />
+        android:text="@string/welcome_message" />
 
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="email" />
+        android:hint="@string/username" />
 
     <TextView
-        android:id="@+id/FBemail"
+        android:id="@+id/fb_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:visibility="gone"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/fb_username" />
 
     <EditText
         android:id="@+id/password"
@@ -38,10 +40,20 @@
         android:hint="@string/password" />
 
     <TextView
-        android:id="@+id/FBpassword"
+        android:id="@+id/fb_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:visibility="gone"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/fb_password" />
+
+    <TextView
+        android:id="@+id/fb_failed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/fb_failed" />
 
     <LinearLayout
         android:layout_width="match_parent"
