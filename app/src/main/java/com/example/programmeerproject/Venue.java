@@ -1,10 +1,7 @@
 package com.example.programmeerproject;
 
-import java.util.List;
-
 public class Venue {
     /* Fields */
-    // 1st request
     private int venue_id;
     private String venue_name;
     private String category;
@@ -12,34 +9,24 @@ public class Venue {
     private String street;
     private String zipcode;
     private String city;
-    //private String currency_symbol;
     private float latitude;
     private float longitude;
     private float distance;
-
-    // This list is needed to extract diets, not for here though
-    //private String[] diets = {"biological", "glutenfree", "lactose-free", "sugar-free",
-            //"sugar-free", "vegetarian", "vegan"};
-    // Maybe: opening hours, wifi, accessible (by wheelchair), allows-dogs, ambiances
 
     /* Constructors */
     public Venue() {}
 
     public Venue(String name, String telephone, String category, String street, String zipcode,
-                 String city,
-                 /*String currency_symbol,*/ float latitude, float longitude, float distance
-                 /*,String[] diets*/){
+                 String city,float latitude, float longitude, float distance){
         this.venue_name = name;
         this.telephone = telephone;
         this.category = category;
         this.street = street;
         this.zipcode = zipcode;
         this.city = city;
-        //this.currency_symbol = currency_symbol;
         this.latitude = latitude;
         this.longitude = longitude;
         this.distance = distance;
-        //this.diets = diets;
     }
 
     /* Properties: Getters and setters */
@@ -72,9 +59,4 @@ public class Venue {
 
     public float getDistance() {return distance; }
     public void setDistance(float distance) {this.distance = distance; }
-
-    //public String[] getDiets() {return diets; }
-    //public void setDiets(String[] diets) {this.diets = diets; }
-
-
 }

@@ -1,11 +1,4 @@
 package com.example.programmeerproject;
-
-/* TO DO
-*  When location is not turned on, and permission is given: notify user to turn location on
-* Fix: the errors that occur when 'back'-button is pressed
-* Come up with a strategy for device rotation
-* */
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -17,18 +10,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources.NotFoundException;
-import android.graphics.Camera;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.Manifest;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -53,7 +47,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -61,68 +54,101 @@ import static java.lang.String.valueOf;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener,
-        LocationListener, VenuesRequest.Callback {
+        LocationListener, VenuesRequest.Callback, View.OnClickListener {
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
-    LocationRequest mLocationRequest;
-    GoogleMap mMap;
-    String strLongitude; String strLatitude;
-    Integer user_id;
-    UserDBHandler handler;
+    Button btn_logout, btn_preferences;
     TextView info;
+    String str_latitude, str_longitude;
+    Integer user_id;
+
+    GoogleApiClient google_api_client;
+    Location last_location;
+    Marker current_location_marker;
+    LocationRequest location_request;
+    GoogleMap map;
+
+    UserDBHandler handler;
     User user;
-    VenueAdapter mAdapter;
+    VenueAdapter adapter;
+
     LatLngBounds bounds;
     LatLngBounds.Builder builder;
+
+    boolean doubleBackToExitPressedOnce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        String test = String.valueOf(R.string.welcome_message);
-
         // Get user_id from intent
         Intent intent = getIntent();
         user_id = intent.getIntExtra("user_id",100);
 
-        // Use user_id to call getUser() which returns a user instance
+        // Use user_id to get user
         handler = new UserDBHandler(MapsActivity.this);
         user = handler.getUser(user_id);
 
-        // Button stuff
-        //logout = findViewById(R.id.log);
-
-        // some sort of check whether data can be extracted from user
+        // show the user which prefernces are included
         info = findViewById(R.id.info);
-        info.setText(user.getPreferences());
-        info.setVisibility(View.VISIBLE);
+        info.setVisibility(View.GONE);
+
+        // set false
+        doubleBackToExitPressedOnce = false;
 
         // Check if the application has permission to use location
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
+
         // Make sure there is a fragment, if so: get the Map (which is an asynchronous task)
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+
+        // Initiate buttons
+        btn_logout = findViewById(R.id.btn_logout);
+        btn_preferences = findViewById(R.id.btn_preferences);
+
+        // set clickListeners on the above mentioned buttons
+        btn_logout.setOnClickListener(this);
+        btn_preferences.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_logout:
+                // Empty saved name/value pairs and boolean
+                SharedPreferences.Editor editor = getSharedPreferences("name", MODE_PRIVATE).edit();
+                editor.putString("username", "");
+                editor.putString("password", "");
+                editor.putBoolean("isLoggedIn", false);
+                editor.apply();
+
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.putExtra("finish", true);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
+                finish();
+                break;
+            case R.id.btn_preferences:
+                // start new activity to Preferences and give with: the user_id
+                Intent i = new Intent(getApplicationContext(), PreferencesActivity.class);
+                i.putExtra("user_id", user.getId());
+                startActivity(i);
+        }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.getUiSettings().setZoomGesturesEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(true);
-        mMap.getUiSettings().setMapToolbarEnabled(false);
-
-        // TODO: find out why the zoom only works when this seemingly useless line is here
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        // Initiate map and set some controls
+        map = googleMap;
+        map.getUiSettings().setZoomControlsEnabled(true);
 
         // Initialize google play services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -130,11 +156,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 buildGoogleApiClient();
-                mMap.setMyLocationEnabled(true);
+                map.setMyLocationEnabled(true);
             }
         } else {
             buildGoogleApiClient();
-            mMap.setMyLocationEnabled(true);
+            map.setMyLocationEnabled(true);
         }
 
         // apply style to map
@@ -147,40 +173,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         } catch (NotFoundException e) {
             // toast cant find style
-            Log.d("style not found", "");
+            Log.d("style not found", "style could not be found.");
         }
     }
 
     protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        // conntect to MapsAPI and add callbacks and listeners
+        google_api_client = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        mGoogleApiClient.connect();
+        google_api_client.connect();
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(1000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        location_request = new LocationRequest();
+        location_request.setInterval(1000);
+        location_request.setFastestInterval(1000);
+        location_request.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
-                    mLocationRequest, this);
+            LocationServices.FusedLocationApi.requestLocationUpdates(google_api_client,
+                    location_request, this);
         }
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-    }
+    public void onConnectionSuspended(int i) { }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-    }
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) { }
 
     public void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
@@ -197,38 +222,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
         else {
+            // location is not turned on
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        mLastLocation = location;
-        if (mCurrLocationMarker != null) {
-            mCurrLocationMarker.remove();
+        last_location = location;
+        if (current_location_marker != null) {
+            current_location_marker.remove();
         }
+
         // Showing Current Location Marker on Map
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         LocationManager locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
+
+        assert locationManager != null;
         String provider = locationManager.getBestProvider(new Criteria(), true);
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
+        // Based on provider, extract the longitude and latitude to make and add markers on the map
+        assert provider != null;
         Location locations = locationManager.getLastKnownLocation(provider);
         List<String> providerList = locationManager.getAllProviders();
-        if (null != locations && null != providerList && providerList.size() > 0) {
+        if (null != locations && providerList.size() > 0) {
             double longitude = locations.getLongitude();
             double latitude = locations.getLatitude();
 
-            strLatitude = String.valueOf(latitude);
-            strLongitude = String.valueOf(longitude);
-
+            str_latitude = String.valueOf(latitude);
+            str_longitude = String.valueOf(longitude);
+            // Initiate builder to add the current location
             builder = new LatLngBounds.Builder();
 
             // Set a marker on map on user's location
@@ -241,6 +273,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     String state = listAddresses.get(0).getAdminArea();
                     String country = listAddresses.get(0).getCountryName();
                     markerOptions.title("" + latLng + "," + state + "," + country);
+                    map.addMarker(markerOptions);
+                    // Add 'marker' to include it in the bounds and make it visible on the map
                     builder.include(new LatLng(latitude, longitude));
                 }
             } catch (IOException e) {
@@ -248,27 +282,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
 
-        //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-        //mCurrLocationMarker = mMap.addMarker(markerOptions);
-
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        //mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-        if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient,
+        if (google_api_client != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(google_api_client,
                     this);
         }
 
         // When lat and lon are retrieved, start request to API
         // Put preferences in a API request
         String url = "https://api.eet.nu/venues?tags="+user.getPreferences()+"&geolocation="
-                +strLatitude+","+strLongitude;
+                + str_latitude +","+ str_longitude;
 
         // Make request
         VenuesRequest venuesRequest = new VenuesRequest(this);
         venuesRequest.getVenues(this, url);
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -279,93 +306,100 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
-                    if (mGoogleApiClient == null) {
+                    if (google_api_client == null) {
                         buildGoogleApiClient();
                     }
-                    mMap.setMyLocationEnabled(true);
+                    map.setMyLocationEnabled(true);
                 }
             } else {
-                Toast.makeText(this, "permission denied",Toast.LENGTH_LONG).show();
+                info.setText(R.string.location_permission);
+                info.setVisibility(View.VISIBLE);
             }
         }
     }
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
+        // Check whether the back button is pressed again
+        if(doubleBackToExitPressedOnce){
+            // Do something with saved instances
+            SharedPreferences.Editor editor = getSharedPreferences("name", MODE_PRIVATE).edit();
+            editor.putString("username", "");
+            editor.putString("password", "");
+            editor.putBoolean("isLoggedIn", false);
+            editor.apply();
+
+            // Go to LoginActivity.java
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            intent.putExtra("finish", true);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+
+            finish();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Klik nog een keer om uit te loggen", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        },2000);
     }
 
     @Override
     public void gotVenues(ArrayList<Venue> venues) {
-        info = findViewById(R.id.info);
-        //info.setText(venues.toString());
-        //info.setVisibility(View.VISIBLE);
 
-        //ArrayAdapter<Object> adapter = new ArrayAdapter<>(
-                //this, android.R.layout.simple_list_item_1, venues);
-        mAdapter = new VenueAdapter(MapsActivity.this, venues);
+        // Initiate adapter for the venues
+        adapter = new VenueAdapter(MapsActivity.this, venues);
+
         // "Grab" ListView and fill rows via a custom adapter
-        ListView lv_venues = findViewById(R.id.lv_venues);
-        lv_venues.setAdapter(mAdapter);
+        final ListView lv_venues = findViewById(R.id.lv_venues);
+        lv_venues.setAdapter(adapter);
 
-        builder = new LatLngBounds.Builder();
+        // Extract phone numbers and put
+        final ArrayList<String> strA_telephones = new ArrayList<>();
 
         // Do something here to display the markers on map
         for (int i = 0; i < venues.size();i++){
             Venue venue = venues.get(i);
             double latitude = venue.getLatitude();
             double longitude = venue.getLongitude();
-            //Toast.makeText(MapsActivity.this, String.valueOf(latitude), Toast.LENGTH_SHORT).show();
+
+            // Add the telephone number to the string array
+            strA_telephones.add(venue.getTelephone());
 
             // Add marker to builder and show on map
             MarkerOptions markerOptions = new MarkerOptions();
-
-
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
             markerOptions.position(new LatLng(latitude, longitude)).title(venue.get_venue_name());
-            mMap.addMarker(markerOptions);
+            map.addMarker(markerOptions);
             builder.include(markerOptions.getPosition());
-            //mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(venue.get_venue_name()));
-
-
         }
 
-        // CameraUpdate so that all markers are visible
+        lv_venues.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Extract phone number and open dialer with clicked venue's telephone number
+                String str_telephone = strA_telephones.get(position);
+                Intent phone_intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel",
+                        str_telephone,null));
+                startActivity(phone_intent);
+            }
+        });
 
+        // Convert builder to bounds and use to update the camera so that all venues are visible
         bounds = builder.build();
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 11));
-        /*CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 11);
-        mMap.animateCamera(cu);*/
-        //mMap.moveCamera(CameraUpdateFactory.zoomTo(16));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 4));
-        //mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-        /*int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = getResources().getDimensionPixelSize(R.dimen.fab_margin);*/
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 40);
-        mMap.animateCamera(cu);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 20);
+        map.animateCamera(cu);
     }
 
     @Override
     public void gotError(String message) {
         Toast.makeText(MapsActivity.this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    public void btnLogout(View view) {
-        SharedPreferences.Editor editor = getSharedPreferences("name", MODE_PRIVATE).edit();
-        editor.putString("username", "");
-        editor.putString("password","");
-        editor.putBoolean("isLoggedIn", false);
-        editor.apply();
-
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        intent.putExtra("finish", true);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-
-        finish();
-    }
-
-    public void btnPreferences(View view) {
     }
 }
 

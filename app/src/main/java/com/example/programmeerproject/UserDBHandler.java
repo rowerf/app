@@ -5,21 +5,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import android.widget.Toast;
-
-import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class UserDBHandler extends SQLiteOpenHelper {
     // Database version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Database name
-    private static final String DATABASE_NAME = "UserDB.db";
+    private static final String DATABASE_NAME = "UsersDB.db";
 
     // User table name
     private static final String TABLE_USER = "User";
@@ -34,15 +29,16 @@ public class UserDBHandler extends SQLiteOpenHelper {
 
 
     public UserDBHandler(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null,
+                DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create table SQL Query
-        String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
-                + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USERNAME + " TEXT,"
-                /*+ COLUMN_EMAIL + " TEXT,"*/ + COLUMN_PASSWORD + " TEXT," + COLUMN_PREFERENCES + " TEXT)";
+        String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + " ("
+                + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_USERNAME
+                + " TEXT," + COLUMN_PASSWORD + " TEXT," + COLUMN_PREFERENCES + " TEXT)";
         db.execSQL(CREATE_USER_TABLE);
     }
 
@@ -68,31 +64,17 @@ public class UserDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Fetch all users in a list
-    public List<User> getAllUsers(){
-        String[] columns = {COLUMN_USER_ID,COLUMN_USERNAME,COLUMN_PASSWORD,COLUMN_PREFERENCES};
-        String sortOrder = COLUMN_USERNAME + "ASC";
-        List<User> userList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        // SELECT id, name, email, password and preferences FROM user ORDER BY username
-        Cursor c = db.query(TABLE_USER,columns, null, null, null,
-                            null, sortOrder);
-        // Go through cursor and add to userList
-        if(c.moveToFirst()){
-            do {
-                User user = new User();
-                user.setId(Integer.parseInt(c.getString(c.getColumnIndex(COLUMN_USER_ID))));
-                user.setUsername(c.getString(c.getColumnIndex(COLUMN_USERNAME)));
-                user.setPassword(c.getString(c.getColumnIndex(COLUMN_PASSWORD)));
-                user.setPreferences(c.getString(c.getColumnIndex(COLUMN_PREFERENCES)));
-                // Adding user record to list
-                userList.add(user);
-            } while (c.moveToNext());
-        }
-        c.close();
+    public void updateUser(int id, String username, String preferences){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USERNAME, username);
+        values.put(COLUMN_PREFERENCES, preferences);
+
+        String where_clause = COLUMN_USER_ID + "=?";
+        String where_args[] = {String.valueOf(id)};
+        // close databse and update
+        db.update(TABLE_USER, values, where_clause, where_args);
         db.close();
-        // return user list
-        return userList;
     }
 
     // Fetch user_id based on username
@@ -124,7 +106,13 @@ public class UserDBHandler extends SQLiteOpenHelper {
         String[] selectionArgs = {String.valueOf(id)};
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.query(TABLE_USER,columns,selection,selectionArgs,null, null, null);
+        Cursor c = db.query(TABLE_USER,
+                columns,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null);
         User user = new User();
 
         if(c.moveToFirst()){
@@ -138,14 +126,6 @@ public class UserDBHandler extends SQLiteOpenHelper {
         c.close();
         db.close();
         return user;
-    }
-
-    public void deleteUser(User user) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        // delete user record by id
-        db.delete(TABLE_USER, COLUMN_USER_ID + " = ?",
-                new String[]{String.valueOf(user.getId())});
-        db.close();
     }
 
     // Check if username not already exists in UserDB
@@ -174,7 +154,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
         return false;
     }
 
-    /* This method to check user exist or not, based on username and password. Returns true/false */
+    // This method to check user exist or not, based on username and password. Returns true/false
     public boolean checkUser(String username, String password) {
         // array of columns to fetch
         String[] columns = {
@@ -188,7 +168,6 @@ public class UserDBHandler extends SQLiteOpenHelper {
         String[] selectionArgs = {username, password};
 
         // query user table with conditions
-        /* SELECT user_id FROM user WHERE user_email = 'hiereenemail@adres.com' AND user_password = 'qwerty';*/
         Cursor cursor = db.query(TABLE_USER, // Table to query
                 columns,                     // columns to return
                 selection,                   // columns for the WHERE clause

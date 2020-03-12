@@ -10,23 +10,17 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import static android.view.View.GONE;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button confirm, cancel;
+    Button btn_confirm, btn_cancel;
     EditText et_username, et_password;
-    TextView fb_username, fb_username_2, fb_password, fb_password_2, fb_preferences;
-    String username, password;
-    //List<String> preferences;
-    String preferences;
+    TextView tv_fb_username, tv_fb_username_2, tv_fb_password, tv_fb_password_2, tv_fb_preferences;
+    String str_username, str_password, str_preferences;
     boolean atLeastOneChecked;
-    //StringBuilder csvPreferences;
     UserDBHandler handler;
-    UserDBHandler handler2;
     User user;
     Integer user_id;
 
@@ -38,19 +32,23 @@ public class RegisterActivity extends AppCompatActivity {
         // Initiate views
         et_username = findViewById(R.id.et_username);
         et_password = findViewById(R.id.et_password);
-        confirm = findViewById(R.id.confirm);
-        cancel = findViewById(R.id.cancel);
+        btn_confirm = findViewById(R.id.confirm);
+        btn_cancel = findViewById(R.id.cancel);
 
-        /* When confirm is clicked */
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Initiate things
-                fb_username = findViewById(R.id.fb_username);
-                fb_username_2 = findViewById(R.id.fb_username2);
-                fb_password = findViewById(R.id.fb_password);
-                fb_password_2 = findViewById(R.id.fb_password2);
-                fb_preferences = findViewById(R.id.fb_preferences);
+        btn_confirm.setOnClickListener(this);
+        btn_cancel.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.confirm:
+                // Initiate TextViews, CheckBoxes and other variables
+                tv_fb_username = findViewById(R.id.fb_username);
+                tv_fb_username_2 = findViewById(R.id.fb_username2);
+                tv_fb_password = findViewById(R.id.fb_password);
+                tv_fb_password_2 = findViewById(R.id.fb_password2);
+                tv_fb_preferences = findViewById(R.id.fb_preferences);
 
                 CheckBox vegetarian = findViewById(R.id.vegetarian);
                 CheckBox vegan = findViewById(R.id.vegan);
@@ -60,25 +58,31 @@ public class RegisterActivity extends AppCompatActivity {
                 CheckBox sugarfree = findViewById(R.id.sugarfree);
 
                 atLeastOneChecked = false;
-                //preferences = new ArrayList<>();
-                preferences = "";
+                str_preferences = "";
+
+                // Set textviews to gone, for when btn_confirn is clicked again
+                tv_fb_username.setVisibility(GONE);
+                tv_fb_username_2.setVisibility(GONE);
+                tv_fb_password.setVisibility(GONE);
+                tv_fb_password_2.setVisibility(GONE);
+                tv_fb_preferences.setVisibility(GONE);
 
                 // Extract username and password
-                username = et_username.getText().toString();
-                password = et_password.getText().toString();
+                str_username = et_username.getText().toString();
+                str_password = et_password.getText().toString();
 
-                // Check EditTexts and give feedback when necessary
-                if (username.isEmpty()){
+                // Check EditTexts and give feedback where necessary
+                if (str_username.isEmpty()){
                     // UpdateUI with notification that username is empty
-                    fb_username.setVisibility(View.VISIBLE);
+                    tv_fb_username.setVisibility(View.VISIBLE);
                 }
-                if (password.isEmpty()){
+                if (str_password.isEmpty()){
                     // Notify the user that password is empty
-                    fb_password.setVisibility(View.VISIBLE);
+                    tv_fb_password.setVisibility(View.VISIBLE);
                 }
-                if (password.length() <5 && !password.isEmpty()){
+                if (str_password.length() <5 && !str_password.isEmpty()){
                     // Notify the user when username is less than 5 characters long
-                    fb_password_2.setVisibility(View.VISIBLE);
+                    tv_fb_password_2.setVisibility(View.VISIBLE);
                 }
 
                 // Notify user if no preferences are given
@@ -87,92 +91,67 @@ public class RegisterActivity extends AppCompatActivity {
                     atLeastOneChecked = true;
                 }
 
-                // When at least one preference is given, convert it into comma separated value list
-                //csvPreferences = new StringBuilder();
-                //for(String s : preferences){
-                    //csvPreferences.append(s);
-                    //csvPreferences.append(",");
-                //}
-
                 // Check if at least one checkbox is checked
                 if (!atLeastOneChecked) {
-                    fb_preferences.setVisibility(View.VISIBLE);
+                    tv_fb_preferences.setVisibility(View.VISIBLE);
                 }
                 else {
-                    //TODO: When someone indicates not to have any preference
-
                     // Save preferences as string
                     if (vegetarian.isChecked()){
-                    //preferences.add("vegetarian");
-                    preferences += "vegetarian,";
+                        str_preferences += "vegetarian,";
                     }
                     if (vegan.isChecked()){
-                        //preferences.add("vegan");
-                        preferences += "vegan,";
+                        str_preferences += "vegan,";
                     }
                     if (biological.isChecked()){
-                    //preferences.add("biological");
-                        preferences += "biological,";
+                        str_preferences += "biological,";
                     }
                     if (glutenfree.isChecked()){
-                    //preferences.add("glutenfree");
-                        preferences += "glutenfree,";
+                        str_preferences += "glutenfree,";
                     }
                     if (lactosefree.isChecked()){
-                    //preferences.add("lactose-free");
-                        preferences += "lastose-free,";
+                        str_preferences += "lactose-free,";
                     }
                     if (sugarfree.isChecked()){
-                    //preferences.add("sugar-free");
-                        preferences += "sugar-free,";
+                        str_preferences += "sugar-free,";
                     }
 
                     // Trim preferences so that the last character is 'removed'
-                    if (preferences != null && preferences.length() > 0
-                            && preferences.charAt(preferences.length()-1) == ','){
-                        preferences = preferences.substring(0, preferences.length()-1);
+                    if (str_preferences != null && str_preferences.length() > 0
+                            && str_preferences.charAt(str_preferences.length()-1) == ','){
+                        str_preferences = str_preferences.substring(0, str_preferences.length()-1);
                     }
 
-                    // Initiate UserDBHandler and user
+                    // Initiate UserDBHandler and post data to the database.
                     handler = new UserDBHandler(RegisterActivity.this);
 
                     // Post new user to DB and go to MapsActivity.java
                     postDataToSQLite();
                 }
-            }
-        });
+                break;
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /* Return to LoginActivity.java when cancel is clicked */
-                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-            }
-        });
+            case R.id.cancel:
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+        }
     }
 
     private void postDataToSQLite() {
-        if (!handler.checkUser(username)) {
+        if (!handler.checkUser(str_username)) {
+            // Create a new user instance
             user = new User();
-            user.setUsername(username.trim());
-            user.setPassword(password);
-            user.setPreferences(preferences);
+            user.setUsername(str_username.trim());
+            user.setPassword(str_password);
+            user.setPreferences(str_preferences);
             handler.addUser(user);
 
-            //Toast.makeText(RegisterActivity.this, user.getPreferences(), Toast.LENGTH_LONG).show();
-
             Intent i = new Intent(RegisterActivity.this, MapsActivity.class);
-            //user_id = user.getId();
-
-            handler2 = new UserDBHandler(RegisterActivity.this);
-            user_id = handler.getUserId(username);
+            user_id = handler.getUserId(str_username);
             i.putExtra("user_id", user_id);
-            //Toast.makeText(RegisterActivity.this, String.valueOf(user_id), Toast.LENGTH_LONG).show();
             startActivity(i);
         } else {
             // UpdateUI that username already exists
-            if (!username.isEmpty()){
-                fb_username_2.setVisibility(View.VISIBLE);
+            if (!str_username.isEmpty()){
+                tv_fb_username_2.setVisibility(View.VISIBLE);
             }
         }
     }

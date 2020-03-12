@@ -1,8 +1,6 @@
 package com.example.programmeerproject;
 
 import android.content.Context;
-import android.util.Log;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -14,7 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class VenuesRequest implements Response.Listener<JSONObject>, Response.ErrorListener {
 
@@ -41,7 +38,7 @@ public class VenuesRequest implements Response.Listener<JSONObject>, Response.Er
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        cb.gotError("Er zijn helaas geen restaurants in de buurt die voldoen aan de eetwensen, excuses.");
+        cb.gotError(context.getString(R.string.error_message));
     }
 
     @Override
@@ -61,6 +58,7 @@ public class VenuesRequest implements Response.Listener<JSONObject>, Response.Er
                 String category = venue.getString("category");
                 String telephone = venue.getString("telephone");
                 int distance = venue.getInt("distance");
+
                 // Extract from Object: address, geolocation
                 JSONObject address = venue.getJSONObject("address");
                 String street = address.getString("street");
@@ -70,9 +68,8 @@ public class VenuesRequest implements Response.Listener<JSONObject>, Response.Er
                 JSONObject geolocation = venue.getJSONObject("geolocation");
                 Double latitude = geolocation.getDouble("latitude");
                 Double longitude = geolocation.getDouble("longitude");
-                //Long latitude = geolocation.getLong("latitude");
-                //Long longitude = geolocation.getLong("longitude");
 
+                // Set venue details and add to the arraylist of venues
                 v.set_venue_id(id);
                 v.set_venue_name(name);
                 v.setCategory(category);

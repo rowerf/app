@@ -1,21 +1,16 @@
 <resources>
-    <string name="app_name">app</string>
+    <string name="app_name">happie</string>
     <string name="title_activity_maps">Maps</string>
-    <string name="title_activity_register_login">RegisterLogin</string>
+    <string name="title_activity_register_login">happie</string>
     <string name="title_activity_register">Register</string>
     <string name="title_activity_friends">Friends</string>
-
     <string name="title_location_permission">request location permission</string>
-
     <string name="text_location_permission">are you OK</string>
-
     <string name="username">gebruikersnaam</string>
     <string name="password">wachtwoord</string>
-
     <string name="login">inloggen</string>
     <string name="register">registreren</string>
     <string name="welcome">welcome</string>
-
     <string name="username_and_password">Kies een gebruikersnaam</string>
     <string name="preferences">Geef uw voedselvoorkeuren aan</string>
     <string name="vegetarian">vegetarisch</string>
@@ -24,21 +19,28 @@
     <string name="lactose_free">lactosevrij</string>
     <string name="sugar_free">suikervrij</string>
     <string name="gluten_free">glutenvrij</string>
-
     <string name="ok">OK</string>
     <string name="cancel">annuleren</string>
     <string name="confirm">bevestigen</string>
     <string name="search">zoek</string>
-
-    <string name="unable_apply_style">For some reason the style could not be applied</string>
-    <string name="style_not_found">Style could not be found</string>
+    <string name="unable_apply_style">Er is iets misgegaan met het ophalen van de
+        kaartstijl</string>
+    <string name="style_not_found">De kaartstijl kon niet gevonden worden</string>
     <string name="fb_username">Vul een gebruikersnaam in</string>
     <string name="fb_username_2">Deze naam is al in gebruik</string>
     <string name="fb_password">Vul een wachtwoord in</string>
     <string name="fb_password_2">Vul op zijn minst 5 karakters in</string>
-    <string name="fb_preferences">Weet u zeker dat u geen voedselvoorkeuren wilt aangeven?</string>
-    <string name="welcome_message">gegroet en welkom</string>
-    <string name="fb_failed">Ohnee, het gaat helemaal mis</string>
-    <string name="uitloggen">uitloggen</string>
+    <string name="fb_preferences">Geef alstublieft op zijn minst één voorkeur aan</string>
+    <string name="welcome_message">welkom!</string>
+    <string name="fb_failed">De combinatie van gebruikersnaam en wachtwoord klopt wellicht niet,
+        of er bestaan geen account met deze gegevens.</string>
+    <string name="logout">uitloggen</string>
     <string name="voorkeuren">voorkeuren</string>
+    <string name="tv_preferences">Voorkeuren</string>
+    <string name="tv_username">Wijzig uw gebruikersnaam:</string>
+    <string name="tv_diets">Wijzig uw voorkeuren:</string>
+    <string name="location_permission">Sluit en heropen de applicatie om locatie toe te staan zodat
+        u deze app kunt gebruiken.</string>
+    <string name="zoek">Zoek</string>
+    <string name="error_message">Er zijn helaas geen restaurants in de buurt die voldoen aan de eetwensen, excuses.</string>
 </resources>

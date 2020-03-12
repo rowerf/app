@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
@@ -16,20 +15,21 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/register"
+            android:id="@+id/tv_preferences"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="30sp"
             android:gravity="center"
             android:padding="15dp"
             android:textAllCaps="true"
-            android:text="@string/register" />
+            android:text="@string/tv_preferences" />
 
         <TextView
-            android:id="@+id/tv_username_password"
+            android:id="@+id/tv_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/username_and_password" />
+            android:paddingTop="15dp"
+            android:text="@string/tv_username" />
 
         <EditText
             android:id="@+id/et_username"
@@ -39,7 +39,7 @@
             android:inputType="textEmailAddress"
             android:textColor="#727272"
             android:hint="@string/username"
-            tools:ignore="Autofill" />
+            android:importantForAutofill="no" />
 
         <TextView
             android:id="@+id/fb_username"
@@ -57,38 +57,12 @@
             android:textColor="@color/colorPrimary"
             android:text="@string/fb_username_2" />
 
-        <EditText
-            android:id="@+id/et_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPassword"
-            android:textColor="#727272"
-            android:hint="@string/password"
-            tools:ignore="Autofill" />
-
         <TextView
-            android:id="@+id/fb_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:textColor="@color/colorPrimary"
-            android:text="@string/fb_password" />
-
-        <TextView
-            android:id="@+id/fb_password2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:textColor="@color/colorPrimary"
-            android:text="@string/fb_password_2" />
-
-        <TextView
-            android:id="@+id/diets"
+            android:id="@+id/tv_diets"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="15dp"
-            android:text="@string/preferences" />
+            android:text="@string/tv_diets" />
 
         <TextView
             android:id="@+id/fb_preferences"
@@ -158,8 +132,8 @@
                 android:theme="@style/checkBoxTheme"
                 android:textColor="#727272"
                 android:text="@string/sugar_free" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -177,20 +151,18 @@
             android:text="@string/cancel"
             android:layout_marginEnd="3dp"
             android:layout_marginRight="3dp"
-            android:layout_marginBottom="3dp"
-            tools:ignore="ButtonStyle" />
+            android:layout_marginBottom="3dp"/>
 
         <Button
-            android:id="@+id/confirm"
+            android:id="@+id/save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/oval_button"
             android:textColor="#FFF"
-            android:text="@string/confirm"
+            android:text="opslaan"
             android:layout_marginStart="3dp"
             android:layout_marginLeft="3dp"
-            android:layout_marginBottom="3dp"
-            tools:ignore="ButtonStyle" />
+            android:layout_marginBottom="3dp"/>
     </LinearLayout>
 </LinearLayout>
