@@ -33,7 +33,7 @@ From HomeActivity.java there's a possibility to either see logout or see/change 
 
 <h3>Diagram of modules, classes and functions</h3>
 
-![visual sketch](doc/updated_diagram.jpg)
+![visual sketch](doc/updated_diagram.PNG)
 
 - Class(es): user, venue, UserDBHandler, VenuesRequest, VenueAdapter | Databases: Users (as displayed above)
 
