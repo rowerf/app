@@ -58,7 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     Button btn_logout, btn_preferences;
-    TextView info;
+    TextView info, info2;
     String str_latitude, str_longitude;
     Integer user_id;
 
@@ -92,7 +92,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // show the user which prefernces are included
         info = findViewById(R.id.info);
-        info.setVisibility(View.GONE);
+        info2 = findViewById(R.id.info2);
+
+        info.setText("Bezig met zoeken...");
+        info.setVisibility(View.VISIBLE);
 
         // set false
         doubleBackToExitPressedOnce = false;
@@ -312,8 +315,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     map.setMyLocationEnabled(true);
                 }
             } else {
-                info.setText(R.string.location_permission);
-                info.setVisibility(View.VISIBLE);
+                info2.setText(R.string.location_permission);
+                info2.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -352,6 +355,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void gotVenues(ArrayList<Venue> venues) {
+        // Hide UI to notify user a search was succesful
+        info.setVisibility(View.GONE);
 
         // Initiate adapter for the venues
         adapter = new VenueAdapter(MapsActivity.this, venues);

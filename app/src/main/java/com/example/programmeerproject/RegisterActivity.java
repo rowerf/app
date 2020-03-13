@@ -1,6 +1,7 @@
 package com.example.programmeerproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     User user;
     Integer user_id;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +41,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         btn_confirm.setOnClickListener(this);
         btn_cancel.setOnClickListener(this);
     }
+
+
 
     @Override
     public void onClick(View v) {
@@ -143,6 +148,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             user.setPassword(str_password);
             user.setPreferences(str_preferences);
             handler.addUser(user);
+
+            // Save user data to shared preferences
+            SharedPreferences.Editor editor = getSharedPreferences("name", MODE_PRIVATE).edit();
+            editor.putString("username", str_username);
+            editor.putString("password", str_password);
+            editor.putBoolean("isLoggedIn", true);
+            editor.apply();
 
             Intent i = new Intent(RegisterActivity.this, MapsActivity.class);
             user_id = handler.getUserId(str_username);

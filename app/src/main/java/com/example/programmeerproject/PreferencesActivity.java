@@ -28,7 +28,7 @@ public class PreferencesActivity extends AppCompatActivity implements View.OnCli
     String updated_preferences;
     boolean atLeastOneChecked;
     UserDBHandler handler2;
-    Button btnCancel, btnSave;
+    Button btnCancel, btnSave, btnIntructions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,19 +91,26 @@ public class PreferencesActivity extends AppCompatActivity implements View.OnCli
         // Initiate buttons and set onclicklisteners
         btnCancel = findViewById(R.id.cancel);
         btnSave = findViewById(R.id.save);
+        btnIntructions = findViewById(R.id.instructions);
 
         // Set clicklisteners on cancel and save button
         btnCancel.setOnClickListener(this);
         btnSave.setOnClickListener(this);
+        btnIntructions.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.instructions:
+                Intent instr_intent = new Intent(getApplicationContext(),InstructionsActivity.class );
+                startActivity(instr_intent);
+                break;
             case R.id.cancel:
-                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-                intent.putExtra("user_id", user_id);
-                startActivity(intent);
+                Intent cancel_intent = new Intent(getApplicationContext(), MapsActivity.class);
+                cancel_intent.putExtra("user_id", user_id);
+                startActivity(cancel_intent);
+                break;
             case R.id.save:
                 // Most of the code underneath is also used in RegisterActivity.java
                 // Make sure a username is given

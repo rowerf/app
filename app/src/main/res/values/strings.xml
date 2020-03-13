@@ -43,4 +43,12 @@
         u deze app kunt gebruiken.</string>
     <string name="zoek">Zoek</string>
     <string name="error_message">Er zijn helaas geen restaurants in de buurt die voldoen aan de eetwensen, excuses.</string>
+    <string name="save">opslaan</string>
+    <string name="instruction">Instructie</string>
+    <string name="instr_explanation">Nadat u ingelogd of geregistreerd bent, krijgt u een kaart te zien met restaurants die voldoen aan uw eetwensen.</string>
+    <string name="instr_route">Klik op een marker op de kaart om de routebeschrijbing te zien.</string>
+    <string name="instr_dialer">Klik op een resultaat om de dialer te openen en meteen een restaurant te kunnen bellen.</string>
+    <string name="instr_preferences">Onder de knop \'voorkeuren\' kunt u uw gebruikersnaam een eetwensen aanpassen. En ook deze instructie terugvinden.</string>
+    <string name="instr_message">Veel plezier, en alvast eet smakelijk!</string>
+    <string name="begin">Beginnen</string>
 </resources>

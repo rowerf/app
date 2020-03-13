@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+    SharedPreferences prefs = null;
     Button btn_login, btn_register;
     EditText et_username, et_password;
     String str_username, str_password;
@@ -24,8 +25,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
 
         /*// SharedPreferences*/
-        SharedPreferences prefs = getSharedPreferences("name", MODE_PRIVATE);
+        prefs = getSharedPreferences("name", MODE_PRIVATE);
         boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
+
 
         // If isLoggenIn is true, then the user is automatically logged in and send to the next
         // activity, namely MapsActivity.java
@@ -48,6 +50,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btn_login.setOnClickListener(this);
         btn_register.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (prefs.getBoolean("firstrun", true)) {
+            // Do first run stuff here then set 'firstrun' as false
+            Intent i_intent = new Intent(getApplicationContext(), InstructionsActivity.class);
+            // using the following line to edit/commit prefs
+            prefs.edit().putBoolean("firstrun", false).apply();
+            startActivity(i_intent);
+        }
     }
 
     @Override

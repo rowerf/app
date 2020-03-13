@@ -24,6 +24,18 @@
             android:textAllCaps="true"
             android:text="@string/tv_preferences" />
 
+        <Button
+            android:id="@+id/instructions"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/oval_button"
+            android:textColor="#FFF"
+            android:text="instructies"
+            android:layout_marginStart="3dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginBottom="3dp"/>
+
         <TextView
             android:id="@+id/tv_username"
             android:layout_width="match_parent"
@@ -160,7 +172,7 @@
             android:layout_weight="1"
             android:background="@drawable/oval_button"
             android:textColor="#FFF"
-            android:text="opslaan"
+            android:text="@string/save"
             android:layout_marginStart="3dp"
             android:layout_marginLeft="3dp"
             android:layout_marginBottom="3dp"/>
