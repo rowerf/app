@@ -13,7 +13,7 @@ Main features:
 - Register as new user and indicate food preferences. Or (auto)login as existing user
 - Suggest a search and request that takes into account location and preferences
 - See on a map with markers the possibilites where to eat, and also the user's own location (for approximity)
-- - As visualisation (shown as a list) there is also a list with more details about the venues (like: name, what kind of food is served (kitchen), address, telephonenumber, and distance)
+- As visualisation (shown as a list) there is also a list with more details about the venues (like: name, what kind of food is served (kitchen), address, telephonenumber, and distance)
 - When a marker is clicked, the name of the venue is shown and there is a possibility to see the travel directions
 - When a venue in the list is clicked, the dialer will open with the phone number for easy reservationmaking or questions
 - The user can change the preferences and username and has acces to instructions
