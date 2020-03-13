@@ -7,7 +7,7 @@ target audience: people that want to eat out but (problem:) don't really know wh
 <h3>Solution</h3>
 This app helps finding venue suggestions based on the user's location, in which it also ensures it meets the preferences, allergies and intolerances. 
 
-![visual sketch](doc/sketch.PNG)
+![visual sketch](doc/updated_sketch.PNG)
 
 Main features:
 - Register as new user and indicate food preferences. Or (auto)login as existing user
@@ -25,7 +25,7 @@ Main features:
 - (*) Have more filter options when a venuerequest is made. Like, kitchenpreferences, but also if there's parking nearby, if dogs are allowed and the accesibility for people in wheelchairs
 - (*) Acces to more detailed information like: price indications, reviews and ambiences, image, menus or a link to the venue's website. Or a possibility to make a reservation.
 
-
+(*) is not part of MVP.
 
 <h2>Prerequisites</h2>
 
